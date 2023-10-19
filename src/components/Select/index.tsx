@@ -12,6 +12,7 @@ export default function Select() {
   const [selectedOption, setSelectedOption] = useState({
     state: "Select a state",
     id:0,
+    return:""
   });
 
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function Select() {
   };
 
   const selectOption = (option: any) => {
+    console.log("option", option)
     setSelectedOption(option);
     setIsOpen(false);
   };
@@ -94,7 +96,7 @@ export default function Select() {
                     <div className="flex flex-col">
                       <span
                         className={`font-normal pl-3 py-2 mt-1 block truncate ${
-                          option.state === selectedOption.state
+                          option.id === selectedOption.id
                             ? "bg-primary text-white"
                             : "text-gray-900"
                         } `}
@@ -105,7 +107,7 @@ export default function Select() {
                         <div className="bg-[#D9D9D9] w-full h-[1px] mt-1" />
                       )}
                     </div>
-                    {option.state === selectedOption.state && (
+                    {option.id === selectedOption.id && (
                       <span className="text-white absolute inset-y-0 right-0 flex items-center pr-4">
                         <svg
                           className="h-5 w-5"
@@ -127,7 +129,7 @@ export default function Select() {
           )}
         </AnimatePresence>
       </div>
-      <p className="lg:mt-10">{data?.data[selectedOption?.id-1]?.return}</p>
+      <p className="lg:mt-10">{selectedOption.return}</p>
       <p
         onClick={() => {
           navigate(navigations.LANDING_PAGE, {
