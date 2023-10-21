@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Key, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import navigations from "../../navigations";
@@ -8,7 +8,7 @@ export default function Select() {
   const [isOpen, setIsOpen] = useState(false);
 
   const { data } = useGetState();
-
+ 
   const [selectedOption, setSelectedOption] = useState({
     state: "Select a state",
     id:0,
@@ -22,11 +22,40 @@ export default function Select() {
   };
 
   const selectOption = (option: any) => {
-    console.log("option", option)
     setSelectedOption(option);
     setIsOpen(false);
   };
-  console.log("hello", selectedOption?.id)
+  const initialData : any = data?.data
+  let newState : any = []
+  let newReport : any = [
+    {   
+      state: '',
+      return : "",
+      id:0,
+    }
+  ]
+  for (let i = 0; i < initialData?.length; i++) {
+    if (newState.includes(initialData[i].abr)) {
+      for (let j = 1; j < newReport?.length; j++) {
+        
+        if (newReport[j].state == initialData[i].state) {
+          newReport[j].return = newReport[j].return+"*"+initialData[i].return
+        }
+      }
+    } else {
+      newState.push(initialData[i].abr)
+      newReport.push({
+        state:initialData[i].state,
+        return:initialData[i].return,
+        id:initialData[i].id
+      })
+
+    }
+  }
+  console.log("newadf", data, newReport);
+  
+
+  
 
   return (
     <div>
@@ -82,7 +111,7 @@ export default function Select() {
               aria-labelledby="listbox-label"
             >
               {data &&
-                data?.data?.map((option, index) => (
+                newReport?.map((option:any, index: Key) => (
                   <motion.li
                     key={index}
                     initial={{ opacity: 0, y: -10 }}
@@ -129,7 +158,10 @@ export default function Select() {
           )}
         </AnimatePresence>
       </div>
-      <p className="lg:mt-10">{selectedOption.return}</p>
+      {selectedOption.return.split("*")?.map((data:any, index: Key) => (
+        <p key={index} className="lg:mt-5">{data}</p>
+      ))}
+      
       <p
         onClick={() => {
           navigate(navigations.LANDING_PAGE, {
